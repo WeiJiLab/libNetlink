@@ -1,10 +1,10 @@
 # libNetlink
-this is a library for operation linux netlink, and subscibe netlink events.
+this is a library for operating linux netlink, and subscibe netlink events.
 
 ### how to use
-if you want to some net package lookup some route table with special fwmark, just link below:
+if you want to net package with special fwmark lookup some route table, like below:
 
-for example : like `ip rule add fwmark 0xFF/0xFFFF lookup 200`
+for example : `ip rule add fwmark 0xFF/0xFFFF lookup 200`
 
 ```cpp
     libNetlink::netlink_socket netLinker;
