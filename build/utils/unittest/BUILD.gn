@@ -1,0 +1,40 @@
+# import("//llvm/utils/gn/build/libs/pthread/enable.gni")
+
+# Used to push the gtest include directories to things depending on :googletest.
+googletest_dir = "//third_party/googletest"
+
+config("googletest_config") {
+  include_dirs = [
+    "${googletest_dir}/googlemock/include",
+    "${googletest_dir}/googletest/include",
+  ]
+
+  # LLVM requires C++11 but gtest doesn't correctly detect the availability
+  # of C++11 on MSVC, so we force it on.
+  defines = [
+    "GTEST_LANG_CXX11",
+    "GTEST_HAS_TR1_TUPLE=0",
+  ]
+  if (host_os == "win") {
+    defines += [ "GTEST_OS_WINDOWS" ]
+  }
+
+  defines += [ "GTEST_HAS_RTTI=0" ]
+}
+
+static_library("gtest") {
+  include_dirs = [
+    "${googletest_dir}/googlemock",  # For including src/gtest.cc
+    "${googletest_dir}/googletest",  # For including src/gmock.cc
+  ]
+  public_configs = [ ":googletest_config" ]
+
+  sources = [
+    "${googletest_dir}/googlemock/src/gmock-all.cc",
+    "${googletest_dir}/googletest/src/gtest-all.cc",
+  ]
+  testonly = true
+  configs -= [
+    "//build:compiler_warnings"
+  ]
+}

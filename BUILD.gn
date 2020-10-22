@@ -1,0 +1,28 @@
+config("libNetlink_include") {
+  include_dirs = ["libnetlink/include"]
+}
+
+static_library("libNetlink_static") {
+  sources = [ 
+    "libnetlink/src/logger.cpp",
+    "libnetlink/src/netlink_msg.cpp",
+    "libnetlink/src/netlink_event.cpp",
+    "libnetlink/src/netlink_socket.cpp",
+    "libnetlink/src/netlink_listener.cpp",
+    "libnetlink/src/netlink_handler.cpp",
+  ]
+  public_configs = [ ":libNetlink_include"]
+}
+
+
+executable("ip") {
+  sources = [
+    "demo/src/ip.cpp",
+  ]
+  libs = [
+    "pthread"
+  ]
+  deps = [
+    ":libNetlink_static",
+  ]
+}

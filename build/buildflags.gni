@@ -1,0 +1,5 @@
+
+declare_args() {
+  # Whether to build with debug information and without optimizations.
+  is_debug = false
+}

@@ -1,0 +1,49 @@
+{
+    "tasks": [
+        {
+            "type": "shell",
+            "label": "ip ninja build",
+            "command": "ninja",
+            "options": {
+                "cwd": "${workspaceFolder}/out"
+            },
+            "problemMatcher": [
+                "$gcc"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        },
+        {
+            "type": "shell",
+            "label": "ip GN generator",
+            "command": "gn",
+            "args": [
+                "gen",
+                "out"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "group": "build",
+            "problemMatcher": []
+        },
+        {
+            "type": "shell",
+            "label": "ip GN DEBUG generator",
+            "command": "gn",
+            "args": [
+                "gen",
+                "out",
+                "--args='is_debug=true'"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
+            "group": "build",
+            "problemMatcher": []
+        }
+    ],
+    "version": "2.0.0"
+}

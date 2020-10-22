@@ -1,0 +1,95 @@
+import("//build/buildflags.gni")
+
+config("compiler_defaults") {
+
+  cflags = []
+
+  if (current_os == "linux") {
+    cflags += [
+      "-pthread",
+      "-fvisibility=hidden"
+    ]
+  }
+
+  if (is_debug) {
+    cflags += [ "-g" ]
+  } else {
+    cflags += [ "-O3" ]
+  }
+}
+
+config("pic") {
+  cflags = [ "-fPIC" ]
+}
+
+config("executable_ldconfig") {
+  if (!is_mac) {
+    ldflags = [
+      "-Wl,-rpath=\$ORIGIN/",
+      "-Wl,-rpath-link=",
+    ]
+  }
+}
+
+config("cxx_17_standard") {
+  cflags_cc = [
+    "-std=c++17",
+  ]
+}
+
+config("c_11_standard") {
+  cflags_c = [
+    "-std=c99",
+  ]
+}
+
+config("treat_as_errors") {
+  cflags = [
+    "-Werror",
+  ]
+}
+
+config("pedantic") {
+  cflags = [
+    "-Wall",
+    "-Wextra",
+  ]
+}
+
+config("clang_compiler_warnings") {
+  cflags = [
+    "-Wshadow", # warn the user if a variable declaration shadows one from a parent context
+    "-Wnon-virtual-dtor", # warn the user if a class with virtual functions has a non-virtual destructor. This helps
+                        # catch hard to track down memory errors
+    "-Wold-style-cast", # warn for c-style casts
+    "-Wcast-align", # warn for potential performance problem casts
+    "-Wunused", # warn on anything being unused
+    "-Woverloaded-virtual", # warn if you overload (not override) a virtual function
+    "-Wpedantic", # warn if non-standard C++ is used
+    "-Wconversion", # warn on type conversions that may lose data
+    "-Wsign-conversion", # warn on sign conversions
+    "-Wnull-dereference", # warn if a null dereference is detected
+    "-Wdouble-promotion", # warn if float is implicit promoted to double
+    "-Wformat=2" # warn on security issues around functions that format output (ie printf)
+  ]
+}
+
+config("gcc_compiler_warnings") {
+  cflags = [
+    "-Wmisleading-indentation", # warn if indentation implies blocks where blocks do not exist
+    "-Wduplicated-cond", # warn if if / else chain has duplicated conditions
+    "-Wduplicated-branches", # warn if if / else branches have duplicated code
+    "-Wlogical-op", # warn about logical operations being used where bitwise were probably wanted
+    "-Wuseless-cast" # warn if you perform a cast to the same type
+  ]
+
+  configs = [ ":clang_compiler_warnings" ]
+}
+
+config("compiler_warnings") {
+  if (current_toolchain == "//build/toolchain/clang:clang") {
+    configs = [ ":clang_compiler_warnings" ]
+  } else {
+    configs = [ ":gcc_compiler_warnings" ]
+  }
+}
